@@ -1,0 +1,319 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Systemizing OBSI Taipei</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0C0A08;
+    --bg-raised:#181410;
+    --bg-raised-2:#201A14;
+    --ink:#F4EFE6;
+    --ink-soft:#B8AC9A;
+    --ink-faint:#75695A;
+    --line:rgba(244,239,230,.14);
+    --gold:#D4AF6A;
+    --gold-soft:#332A1B;
+    --crimson:#B23B3B;
+    --display:"Big Shoulders Display","Arial Narrow",sans-serif;
+    --sans:"IBM Plex Sans","Noto Sans TC","Noto Sans Thai","Helvetica Neue",Arial,sans-serif;
+    --mono:"IBM Plex Mono","SFMono-Regular",Menlo,monospace;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  ::selection{ background:var(--gold); color:#0C0A08; }
+  a{ color:inherit; } p{ margin:0; } figure{ margin:0; }
+  table{ border-collapse:collapse; width:100%; }
+  .container{ max-width:1120px; margin:0 auto; padding:0 24px; }
+  .mono{ font-family:var(--mono); }
+  .eyebrow{ font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-faint); }
+  section{ padding:64px 0; border-top:1px solid var(--line); }
+  section:first-of-type{ border-top:none; }
+  @media (max-width:640px){ section{ padding:44px 0; } }
+  .scroll-x{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  h1,h2,h3{ font-family:var(--display); font-weight:800; text-wrap:balance; margin:0; }
+  h2.section-title{ font-size:clamp(1.7rem,3.2vw,2.3rem); margin-bottom:24px; text-transform:uppercase; max-width:22ch; }
+  html:not([data-lang="en"]) h2.section-title,
+  html:not([data-lang="en"]) .brief-grid h2,
+  html:not([data-lang="en"]) .callout p,
+  html:not([data-lang="en"]) .companion .ttl{ text-transform:none; }
+
+  /* ---- i18n ---- */
+  [data-i18n]{ display:none; }
+  html[data-lang="en"] [data-i18n="en"],
+  html[data-lang="zh"] [data-i18n="zh"],
+  html[data-lang="th"] [data-i18n="th"]{ display:revert; }
+  .lang-switch{ display:flex; gap:6px; }
+  .lang-btn{ font-family:var(--mono); font-size:.68rem; letter-spacing:.04em; padding:5px 9px; border:1px solid var(--line); background:transparent; color:var(--ink-soft); cursor:pointer; }
+  .lang-btn[aria-pressed="true"]{ color:var(--bg); background:var(--gold); border-color:var(--gold); }
+  .topbar-right{ display:flex; align-items:center; gap:12px; }
+
+  .topbar{ position:sticky; top:0; z-index:20; background:rgba(12,10,8,.86); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); }
+  .topbar-row{ display:flex; align-items:center; justify-content:space-between; padding:14px 0; gap:16px; }
+  @media (max-width:640px){ .topbar-row{ flex-wrap:wrap; row-gap:10px; } .topbar-case{ font-size:.66rem; } }
+  .topbar-case{ font-family:var(--mono); font-size:.74rem; letter-spacing:.06em; color:var(--ink-soft); white-space:nowrap; }
+  .topbar-link{ font-family:var(--mono); font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; text-decoration:none; color:var(--gold); white-space:nowrap; border:1px solid var(--gold); padding:6px 12px; }
+
+  /* poster-wall hero */
+  .hero{ position:relative; padding:64px 0 48px; overflow:hidden; }
+  .poster-wall{ position:absolute; inset:0; display:grid; grid-template-columns:repeat(6,1fr); gap:6px; opacity:.16; transform:rotate(-2deg) scale(1.1); z-index:0; }
+  .poster-wall div{ background:var(--bg-raised-2); border:1px solid var(--line); aspect-ratio:3/4; }
+  .hero-content{ position:relative; z-index:1; }
+  .hero-kicker{ display:inline-block; font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold); padding:5px 10px; margin-bottom:20px; }
+  .hero-title{ font-size:clamp(2.3rem,6.6vw,5rem); line-height:.96; text-transform:uppercase; margin-bottom:18px; }
+  .hero-title .hl{ color:var(--gold); }
+  .hero-dek{ font-size:1.05rem; color:var(--ink-soft); max-width:56ch; margin-bottom:36px; }
+
+  .meta-strip{ display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line); background:var(--bg-raised); }
+  .meta-strip div{ padding:16px 18px; border-left:1px solid var(--line); }
+  .meta-strip div:first-child{ border-left:none; }
+  .meta-strip .k{ font-family:var(--mono); font-size:.64rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); display:block; margin-bottom:6px; }
+  .meta-strip .v{ font-size:.9rem; font-weight:500; }
+  @media (max-width:820px){ .meta-strip{ grid-template-columns:repeat(2,1fr); } .meta-strip div:nth-child(2n+1){ border-left:none; } }
+  @media (max-width:480px){ .meta-strip{ grid-template-columns:1fr; } .meta-strip div{ border-left:none !important; border-top:1px solid var(--line); } .meta-strip div:first-child{ border-top:none; } }
+
+  .brief-grid{ display:grid; grid-template-columns:1fr 1fr; gap:48px; }
+  @media (max-width:780px){ .brief-grid{ grid-template-columns:1fr; gap:28px; } }
+  .brief-grid p + p{ margin-top:14px; }
+
+  .callout{ border-left:3px solid var(--gold); padding:4px 0 4px 22px; margin:28px 0; }
+  .callout p{ font-family:var(--display); font-size:1.3rem; line-height:1.3; text-transform:uppercase; }
+
+  .system-strip{ display:flex; border:1px solid var(--line); margin-top:8px; }
+  @media (max-width:780px){ .system-strip{ flex-direction:column; } }
+  .system-step{ flex:1; padding:22px; }
+  .system-step + .system-step{ border-left:1px solid var(--line); }
+  @media (max-width:780px){ .system-step + .system-step{ border-left:none; border-top:1px solid var(--line); } }
+  .system-step .n{ font-family:var(--mono); font-size:.7rem; color:var(--gold); }
+  .system-step h4{ font-family:var(--sans); font-weight:700; font-size:1rem; margin:8px 0 6px; }
+  .system-step p{ font-size:.86rem; color:var(--ink-soft); }
+  .system-arrow{ display:flex; align-items:center; justify-content:center; padding:0 4px; color:var(--ink-faint); font-family:var(--mono); }
+  @media (max-width:780px){ .system-arrow{ display:none; } }
+
+  .pipeline{ display:flex; border:1px solid var(--line); margin-top:8px; background:var(--bg-raised); }
+  @media (max-width:780px){ .pipeline{ flex-direction:column; } }
+  .pipeline-step{ flex:1; padding:20px 16px; text-align:center; }
+  .pipeline-step + .pipeline-step{ border-left:1px solid var(--line); }
+  @media (max-width:780px){ .pipeline-step + .pipeline-step{ border-left:none; border-top:1px solid var(--line); } }
+  .pipeline-step .num{ font-family:var(--mono); color:var(--gold); font-size:.7rem; display:block; margin-bottom:8px; }
+  .pipeline-step .lbl{ font-family:var(--display); font-weight:700; font-size:1.15rem; text-transform:uppercase; }
+  html:not([data-lang="en"]) .pipeline-step .lbl{ text-transform:none; font-family:var(--sans); font-size:.98rem; }
+
+  .doc-card{ border:1px solid var(--line); background:var(--bg-raised); margin-top:8px; }
+  .doc-card .doc-head{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:12px 16px; border-bottom:1px solid var(--line); font-family:var(--mono); font-size:.7rem; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-faint); }
+  .metric-grid{ display:grid; grid-template-columns:repeat(4,1fr); }
+  @media (max-width:700px){ .metric-grid{ grid-template-columns:repeat(2,1fr); } }
+  .metric-cell{ padding:22px 20px; border-left:1px solid var(--line); border-top:1px solid var(--line); }
+  .metric-cell:nth-child(4n+1){ border-left:none; }
+  @media (max-width:700px){ .metric-cell:nth-child(2n+1){ border-left:none; } .metric-cell:nth-child(-n+2){ border-top:none; } }
+  @media (min-width:701px){ .metric-cell:nth-child(-n+4){ border-top:none; } }
+  .metric-cell .k{ font-family:var(--mono); font-size:.64rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); display:block; margin-bottom:8px; }
+  .metric-cell .v{ font-family:var(--display); font-size:1.7rem; color:var(--gold); font-variant-numeric:tabular-nums; }
+
+  .result-list{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:12px 32px; }
+  @media (max-width:700px){ .result-list{ grid-template-columns:1fr; } }
+  .result-list li{ padding-left:20px; position:relative; font-size:.94rem; color:var(--ink-soft); }
+  .result-list li::before{ content:"—"; position:absolute; left:0; color:var(--gold); }
+
+  .proves-list{ display:flex; flex-direction:column; }
+  .proves-row{ display:flex; gap:24px; padding:16px 0; border-top:1px solid var(--line); align-items:baseline; }
+  .proves-row:first-child{ border-top:none; }
+  .proves-row .k{ font-family:var(--mono); font-size:.78rem; text-transform:uppercase; letter-spacing:.06em; color:var(--gold); min-width:19ch; }
+  .proves-row p{ font-size:.92rem; color:var(--ink-soft); }
+  @media (max-width:600px){ .proves-row{ flex-direction:column; gap:6px; } .proves-row .k{ min-width:0; } }
+
+  .tag-cloud{ display:flex; flex-wrap:wrap; gap:10px; }
+  .tag-pill{ font-family:var(--mono); font-size:.76rem; padding:7px 13px; border:1px solid var(--line); color:var(--ink-soft); }
+
+  .companion{ display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; padding:26px 24px; border:1px solid var(--line); background:var(--bg-raised); margin-top:12px; }
+  .companion .lbl{ font-family:var(--mono); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); display:block; margin-bottom:6px; }
+  .companion .ttl{ font-family:var(--display); font-weight:700; font-size:1.3rem; text-transform:uppercase; }
+  .companion a.btn{ font-family:var(--mono); font-size:.78rem; text-decoration:none; color:var(--bg); background:var(--gold); padding:10px 18px; white-space:nowrap; }
+  .methodology{ font-size:.82rem; color:var(--ink-faint); max-width:64ch; margin-top:28px; }
+</style>
+
+<div class="topbar">
+  <div class="container topbar-row">
+    <div class="topbar-case mono">
+      <span data-i18n="en">OBSI TAIPEI — BOOKING SYSTEMS</span>
+      <span data-i18n="zh">OBSI TAIPEI — 訂席系統</span>
+      <span data-i18n="th">OBSI TAIPEI — ระบบการจอง</span>
+    </div>
+    <div class="topbar-right">
+      <a class="topbar-link" href="https://joschiang.github.io/portfolio/obsi-systems.html">
+        <span data-i18n="en">Show Production Case →</span>
+        <span data-i18n="zh">現場製作案例 →</span>
+        <span data-i18n="th">ดูเคสโปรดักชันการแสดงสด →</span>
+      </a>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button class="lang-btn" data-lang="en" aria-pressed="true">EN</button>
+        <button class="lang-btn" data-lang="zh" aria-pressed="false">中</button>
+        <button class="lang-btn" data-lang="th" aria-pressed="false">TH</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="poster-wall">
+    <div></div><div></div><div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div><div></div><div></div>
+  </div>
+  <div class="container hero-content">
+    <span class="hero-kicker">
+      <span data-i18n="en">OBSI Taipei · Booking Systems</span>
+      <span data-i18n="zh">OBSI Taipei．訂席系統</span>
+      <span data-i18n="th">OBSI Taipei · ระบบการจอง</span>
+    </span>
+    <h1 class="hero-title">SYSTEMIZING<br><span class="hl">OBSI TAIPEI</span></h1>
+    <p class="hero-dek">
+      <span data-i18n="en">Turning one-off DJ bookings into a repeatable sales and operations system for a 200+ capacity venue in Taipei's Xinyi District.</span>
+      <span data-i18n="zh">把單次性的 DJ 訂席，轉化成一套可重複使用的銷售與營運系統，服務台北信義區一間容納 200+ 人的場地。</span>
+      <span data-i18n="th">เปลี่ยนการจองดีเจแบบครั้งเดียวให้กลายเป็นระบบขายและปฏิบัติการที่ทำซ้ำได้ สำหรับสถานที่ความจุ 200+ คนในย่านซินยี่ ไทเป</span>
+    </p>
+    <div class="meta-strip">
+      <div><span class="k"><span data-i18n="en">Venue</span><span data-i18n="zh">場地</span><span data-i18n="th">สถานที่</span></span><span class="v"><span data-i18n="en">OBSI Taipei, Xinyi District</span><span data-i18n="zh">OBSI Taipei，信義區</span><span data-i18n="th">OBSI Taipei เขตซินยี่</span></span></div>
+      <div><span class="k"><span data-i18n="en">Capacity</span><span data-i18n="zh">容納人數</span><span data-i18n="th">ความจุ</span></span><span class="v"><span data-i18n="en">200+ · 19 booths + 1 VIP suite</span><span data-i18n="zh">200+ 人．19 個包廂 + 1 間 VIP 套房</span><span data-i18n="th">200+ คน · 19 บูธ + สวีท VIP 1 ห้อง</span></span></div>
+      <div><span class="k"><span data-i18n="en">Role</span><span data-i18n="zh">角色</span><span data-i18n="th">บทบาท</span></span><span class="v"><span data-i18n="en">Bilingual Sales Ops &amp; Systems</span><span data-i18n="zh">雙語銷售營運與系統設計</span><span data-i18n="th">ปฏิบัติการขายสองภาษาและระบบ</span></span></div>
+      <div><span class="k"><span data-i18n="en">Client Status</span><span data-i18n="zh">客戶狀態</span><span data-i18n="th">สถานะลูกค้า</span></span><span class="v"><span data-i18n="en">Active since 2025</span><span data-i18n="zh">自 2025 年起持續合作</span><span data-i18n="th">ทำงานร่วมกันต่อเนื่องตั้งแต่ปี 2025</span></span></div>
+    </div>
+  </div>
+</header>
+
+<section class="container">
+  <div class="brief-grid">
+    <div>
+      <p class="eyebrow" style="margin-bottom:12px;"><span data-i18n="en">The Brief</span><span data-i18n="zh">專案背景</span><span data-i18n="th">โจทย์</span></p>
+      <h2 style="font-size:clamp(1.8rem,3.4vw,2.5rem); text-transform:uppercase; margin-bottom:16px; max-width:16ch;"><span data-i18n="en">Rebuilt from scratch, every time</span><span data-i18n="zh">每一次都從零開始建立</span><span data-i18n="th">สร้างใหม่ทุกครั้งตั้งแต่ต้น</span></h2>
+      <p><span data-i18n="en">Every recurring collab — Wukong × RAVEDAO, Infamous × OBSI, SunB × OBSI, XO × OBSI — was being rebuilt from zero: a new proposal, a new contract, a new execution doc, filed in a different folder each time.</span><span data-i18n="zh">每一場常態合作——Wukong × RAVEDAO、Infamous × OBSI、SunB × OBSI、XO × OBSI——都是從零開始重建：新的提案、新的合約、新的執行文件，每次都存在不同的資料夾裡。</span><span data-i18n="th">ทุกความร่วมมือประจำ — Wukong × RAVEDAO, Infamous × OBSI, SunB × OBSI, XO × OBSI — ถูกสร้างขึ้นใหม่จากศูนย์ทุกครั้ง ทั้งข้อเสนอใหม่ สัญญาใหม่ เอกสารการดำเนินงานใหม่ ที่เก็บไว้คนละโฟลเดอร์ทุกครั้ง</span></p>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom:12px;"><span data-i18n="en">The Fix</span><span data-i18n="zh">解決方案</span><span data-i18n="th">ทางแก้</span></p>
+      <p><span data-i18n="en">I designed a 5-phase project lifecycle so every new booking starts from a working system instead of a blank page — and built the bilingual sales materials needed to pitch the next international act.</span><span data-i18n="zh">我設計了一套 5 階段專案生命週期，讓每一筆新訂席都從一套現成系統開始，而不是從空白頁面重來——同時打造了用來提案下一位國際藝人所需的雙語銷售素材。</span><span data-i18n="th">ผมออกแบบวงจรชีวิตโครงการ 5 ขั้นตอน เพื่อให้การจองใหม่ทุกครั้งเริ่มต้นจากระบบที่ใช้งานได้จริง แทนที่จะเริ่มจากหน้ากระดาษเปล่า และสร้างเอกสารขายสองภาษาที่จำเป็นสำหรับพิชต์ศิลปินนานาชาติรายต่อไป</span></p>
+    </div>
+  </div>
+
+  <div class="callout"><p>
+    <span data-i18n="en">"A repeatable playbook, not a proposal rebuilt from scratch every time a new act comes through the door."</span>
+    <span data-i18n="zh">「一套可重複使用的操作手冊，而不是每次有新藝人上門就重寫一次的提案。」</span>
+    <span data-i18n="th">"คู่มือที่ใช้ซ้ำได้ ไม่ใช่ข้อเสนอที่ต้องเขียนใหม่ทุกครั้งที่มีศิลปินรายใหม่เข้ามา"</span>
+  </p></div>
+
+  <p class="eyebrow" style="margin:44px 0 12px;"><span data-i18n="en">The Pipeline</span><span data-i18n="zh">流程</span><span data-i18n="th">ไปป์ไลน์</span></p>
+  <div class="pipeline">
+    <div class="pipeline-step"><span class="num">01</span><span class="lbl"><span data-i18n="en">Proposal</span><span data-i18n="zh">提案</span><span data-i18n="th">ข้อเสนอ</span></span></div>
+    <div class="pipeline-step"><span class="num">02</span><span class="lbl"><span data-i18n="en">Contract</span><span data-i18n="zh">合約</span><span data-i18n="th">สัญญา</span></span></div>
+    <div class="pipeline-step"><span class="num">03</span><span class="lbl"><span data-i18n="en">Execution</span><span data-i18n="zh">執行</span><span data-i18n="th">ดำเนินงาน</span></span></div>
+    <div class="pipeline-step"><span class="num">04</span><span class="lbl"><span data-i18n="en">Deliverables</span><span data-i18n="zh">交付</span><span data-i18n="th">ส่งมอบ</span></span></div>
+    <div class="pipeline-step"><span class="num">05</span><span class="lbl"><span data-i18n="en">Closing</span><span data-i18n="zh">結案</span><span data-i18n="th">ปิดงาน</span></span></div>
+  </div>
+
+  <p class="eyebrow" style="margin:44px 0 4px;"><span data-i18n="en">Systems Built</span><span data-i18n="zh">建立的系統</span><span data-i18n="th">ระบบที่สร้างขึ้น</span></p>
+  <h3 style="font-family:var(--sans); font-weight:600; font-size:1.2rem; margin-bottom:4px;"><span data-i18n="en">Four working systems behind every booking</span><span data-i18n="zh">每一筆訂席背後的四套運作系統</span><span data-i18n="th">สี่ระบบที่ทำงานอยู่เบื้องหลังทุกการจอง</span></h3>
+  <div class="system-strip" style="margin-top:20px;">
+    <div class="system-step"><span class="n mono">A</span><h4><span data-i18n="en">Bilingual Sales Kits</span><span data-i18n="zh">雙語銷售包</span><span data-i18n="th">ชุดขายสองภาษา</span></h4><p><span data-i18n="en">Chinese/English decks built to pitch international artist bookings and full-venue buyouts.</span><span data-i18n="zh">為國際藝人訂席與全館包場提案打造的中英雙語簡報。</span><span data-i18n="th">เดคภาษาจีน/อังกฤษที่สร้างขึ้นเพื่อพิชต์การจองศิลปินนานาชาติและการเหมาทั้งสถานที่</span></p></div>
+    <div class="system-arrow">+</div>
+    <div class="system-step"><span class="n mono">B</span><h4><span data-i18n="en">DJ Presskit &amp; Talent DB</span><span data-i18n="zh">DJ Presskit 與人才資料庫</span><span data-i18n="th">เพรสคิทดีเจและฐานข้อมูลศิลปิน</span></h4><p><span data-i18n="en">EPKs, riders and booking details organized for every touring act OBSI has worked with.</span><span data-i18n="zh">為每一位與 OBSI 合作過的巡演藝人整理 EPK、Rider 與訂席細節。</span><span data-i18n="th">จัดระเบียบ EPK ไรเดอร์ และรายละเอียดการจองสำหรับศิลปินทัวร์ทุกคนที่ OBSI เคยร่วมงานด้วย</span></p></div>
+    <div class="system-arrow">+</div>
+    <div class="system-step"><span class="n mono">C</span><h4><span data-i18n="en">Weekly Reporting</span><span data-i18n="zh">週報機制</span><span data-i18n="th">รายงานรายสัปดาห์</span></h4><p><span data-i18n="en">A recurring cadence of performance reports the client could actually act on.</span><span data-i18n="zh">一套客戶真正能拿來採取行動的週期性成效報告。</span><span data-i18n="th">รอบรายงานผลลัพธ์ที่เกิดขึ้นสม่ำเสมอ ซึ่งลูกค้านำไปใช้ตัดสินใจต่อได้จริง</span></p></div>
+  </div>
+</section>
+
+<section class="container">
+  <p class="eyebrow" style="margin-bottom:12px;"><span data-i18n="en">Evidence</span><span data-i18n="zh">證據</span><span data-i18n="th">หลักฐาน</span></p>
+  <h2 class="section-title"><span data-i18n="en">One campaign, read closely</span><span data-i18n="zh">仔細解讀一檔廣告活動</span><span data-i18n="th">อ่านแคมเปญเดียวอย่างละเอียด</span></h2>
+  <div class="doc-card">
+    <div class="doc-head">
+      <span><span data-i18n="en">📊 IG Ad Performance — 14-Day Window</span><span data-i18n="zh">📊 IG 廣告成效——14 天週期</span><span data-i18n="th">📊 ผลลัพธ์โฆษณา IG — ช่วง 14 วัน</span></span>
+      <span><span data-i18n="en">Internal weekly report</span><span data-i18n="zh">內部週報</span><span data-i18n="th">รายงานภายในรายสัปดาห์</span></span>
+    </div>
+    <div class="metric-grid">
+      <div class="metric-cell"><span class="k"><span data-i18n="en">Ad Spend</span><span data-i18n="zh">廣告花費</span><span data-i18n="th">ค่าโฆษณา</span></span><span class="v">NT$14,607</span></div>
+      <div class="metric-cell"><span class="k"><span data-i18n="en">Impressions</span><span data-i18n="zh">曝光次數</span><span data-i18n="th">การเข้าถึง</span></span><span class="v">41,028</span></div>
+      <div class="metric-cell"><span class="k"><span data-i18n="en">Clicks</span><span data-i18n="zh">點擊次數</span><span data-i18n="th">คลิก</span></span><span class="v">968</span></div>
+      <div class="metric-cell"><span class="k"><span data-i18n="en">Inbound Messages</span><span data-i18n="zh">詢問訊息數</span><span data-i18n="th">ข้อความทักเข้ามา</span></span><span class="v">101</span></div>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:28px;"><p>
+    <span data-i18n="en">"Reading the report is the job — not just running the ad."</span>
+    <span data-i18n="zh">「解讀報表才是真正的工作——不是只把廣告投出去而已。」</span>
+    <span data-i18n="th">"การอ่านรายงานต่างหากที่เป็นงานจริง — ไม่ใช่แค่การปล่อยโฆษณา"</span>
+  </p></div>
+  <p style="font-size:.94rem; color:var(--ink-soft); margin-top:12px;">
+    <span data-i18n="en">Message volume stayed healthy through the first week, but by day ten the same single creative was losing efficiency — cost per message climbed as reach saturated on the same audience. Rather than keep spending on a tired asset, the campaign was paused and flagged for a creative refresh before the next flight.</span>
+    <span data-i18n="zh">第一週的詢問量維持穩健，但到第十天，同一份素材的效率開始下滑——隨著同一批受眾的觸及趨於飽和，每則訊息成本逐漸攀升。與其繼續花錢在一份疲乏的素材上，我們選擇暫停投放，並標記需要在下一檔廣告前更新素材。</span>
+    <span data-i18n="th">ปริมาณข้อความยังคงดีตลอดสัปดาห์แรก แต่พอถึงวันที่สิบ ครีเอทีฟชิ้นเดียวกันเริ่มมีประสิทธิภาพลดลง — ต้นทุนต่อข้อความสูงขึ้นเมื่อการเข้าถึงกลุ่มเป้าหมายเดิมเริ่มอิ่มตัว แทนที่จะใช้จ่ายต่อกับชิ้นงานที่เริ่มล้า แคมเปญถูกหยุดชั่วคราวและตั้งธงให้ปรับครีเอทีฟใหม่ก่อนแคมเปญรอบถัดไป</span>
+  </p>
+</section>
+
+<section class="container">
+  <p class="eyebrow" style="margin-bottom:12px;"><span data-i18n="en">Results</span><span data-i18n="zh">成果</span><span data-i18n="th">ผลลัพธ์</span></p>
+  <h2 class="section-title"><span data-i18n="en">What the system produced</span><span data-i18n="zh">這套系統產出了什麼</span><span data-i18n="th">สิ่งที่ระบบสร้างขึ้น</span></h2>
+  <ul class="result-list">
+    <li><span data-i18n="en">101 inbound inquiries generated in a 14-day window at an average of NT$145 per inquiry.</span><span data-i18n="zh">14 天內產生 101 則詢問，平均每則成本 NT$145。</span><span data-i18n="th">สร้างข้อความทักเข้ามา 101 ครั้งภายใน 14 วัน เฉลี่ยครั้งละ NT$145</span></li>
+    <li><span data-i18n="en">Recurring collab partners now run on one shared 5-phase structure instead of one-off files.</span><span data-i18n="zh">常態合作夥伴現在共用同一套 5 階段結構，而不是各自獨立的檔案。</span><span data-i18n="th">พาร์ทเนอร์ความร่วมมือประจำตอนนี้ใช้โครงสร้าง 5 ขั้นตอนร่วมกัน แทนที่จะเป็นไฟล์แยกเฉพาะครั้ง</span></li>
+    <li><span data-i18n="en">Bilingual sales kits used to pitch new international artist bookings.</span><span data-i18n="zh">雙語銷售包被用來提案新的國際藝人訂席。</span><span data-i18n="th">ชุดขายสองภาษาถูกนำไปใช้พิชต์การจองศิลปินนานาชาติรายใหม่</span></li>
+    <li><span data-i18n="en">Weekly reporting caught creative fatigue early and paused spend before cost-per-result climbed further.</span><span data-i18n="zh">週報機制及早發現素材疲乏，並在單次成果成本進一步攀升前就暫停了花費。</span><span data-i18n="th">รายงานรายสัปดาห์จับสัญญาณครีเอทีฟล้าได้ตั้งแต่เนิ่น ๆ และหยุดค่าใช้จ่ายก่อนที่ต้นทุนต่อผลลัพธ์จะสูงขึ้นไปอีก</span></li>
+  </ul>
+</section>
+
+<section class="container">
+  <p class="eyebrow" style="margin-bottom:12px;"><span data-i18n="en">What This Proves</span><span data-i18n="zh">這證明了什麼</span><span data-i18n="th">สิ่งที่พิสูจน์ได้</span></p>
+  <div class="proves-list">
+    <div class="proves-row"><span class="k"><span data-i18n="en">Sales Systems Design</span><span data-i18n="zh">銷售系統設計</span><span data-i18n="th">การออกแบบระบบการขาย</span></span><p><span data-i18n="en">Turns one-off bookings into a repeatable proposal-to-close pipeline.</span><span data-i18n="zh">把單次性的訂席，轉化成一套從提案到結案都能重複使用的流程。</span><span data-i18n="th">เปลี่ยนการจองแบบครั้งเดียวให้กลายเป็นไปป์ไลน์ตั้งแต่ข้อเสนอจนถึงปิดงานที่ทำซ้ำได้</span></p></div>
+    <div class="proves-row"><span class="k"><span data-i18n="en">Bilingual Biz Development</span><span data-i18n="zh">雙語業務開發</span><span data-i18n="th">การพัฒนาธุรกิจสองภาษา</span></span><p><span data-i18n="en">Builds sales materials that pitch international acts in both Chinese and English.</span><span data-i18n="zh">打造能用中英雙語向國際藝人提案的銷售素材。</span><span data-i18n="th">สร้างเอกสารขายที่ใช้พิชต์ศิลปินนานาชาติได้ทั้งภาษาจีนและอังกฤษ</span></p></div>
+    <div class="proves-row"><span class="k"><span data-i18n="en">Marketing Analytics</span><span data-i18n="zh">行銷數據分析</span><span data-i18n="th">การวิเคราะห์การตลาด</span></span><p><span data-i18n="en">Reads a live ad report closely enough to call creative fatigue before it gets expensive.</span><span data-i18n="zh">仔細解讀即時廣告報表，在成本失控前就判斷出素材疲乏。</span><span data-i18n="th">อ่านรายงานโฆษณาแบบสดอย่างละเอียดพอที่จะเรียกสัญญาณครีเอทีฟล้าได้ก่อนที่ต้นทุนจะบานปลาย</span></p></div>
+  </div>
+</section>
+
+<section class="container">
+  <p class="eyebrow" style="margin-bottom:14px;"><span data-i18n="en">Capability Tags</span><span data-i18n="zh">能力標籤</span><span data-i18n="th">แท็กความสามารถ</span></p>
+  <div class="tag-cloud">
+    <span class="tag-pill"><span data-i18n="en">Venue Operations</span><span data-i18n="zh">場館營運</span><span data-i18n="th">ปฏิบัติการสถานที่</span></span>
+    <span class="tag-pill"><span data-i18n="en">Sales Systems Design</span><span data-i18n="zh">銷售系統設計</span><span data-i18n="th">การออกแบบระบบการขาย</span></span>
+    <span class="tag-pill"><span data-i18n="en">Bilingual Business Development</span><span data-i18n="zh">雙語業務開發</span><span data-i18n="th">การพัฒนาธุรกิจสองภาษา</span></span>
+    <span class="tag-pill"><span data-i18n="en">Marketing Analytics</span><span data-i18n="zh">行銷數據分析</span><span data-i18n="th">การวิเคราะห์การตลาด</span></span>
+    <span class="tag-pill"><span data-i18n="en">Booking Operations</span><span data-i18n="zh">訂席營運</span><span data-i18n="th">ปฏิบัติการการจอง</span></span>
+    <span class="tag-pill"><span data-i18n="en">Nightlife Industry</span><span data-i18n="zh">夜生活產業</span><span data-i18n="th">อุตสาหกรรมไนท์ไลฟ์</span></span>
+    <span class="tag-pill"><span data-i18n="en">Taiwan</span><span data-i18n="zh">台灣</span><span data-i18n="th">ไต้หวัน</span></span>
+  </div>
+</section>
+
+<section class="container" style="padding-bottom:64px;">
+  <div class="companion">
+    <div>
+      <span class="lbl"><span data-i18n="en">Same venue, what happens on stage</span><span data-i18n="zh">同一個場地，舞台上發生的事</span><span data-i18n="th">สถานที่เดียวกัน สิ่งที่เกิดขึ้นบนเวที</span></span>
+      <span class="ttl"><span data-i18n="en">Producing OBSI Taipei</span><span data-i18n="zh">OBSI Taipei 現場製作</span><span data-i18n="th">การโปรดักชัน OBSI Taipei</span></span>
+    </div>
+    <a class="btn" href="https://joschiang.github.io/portfolio/obsi-systems.html">
+      <span data-i18n="en">View the show production case →</span>
+      <span data-i18n="zh">查看現場製作案例 →</span>
+      <span data-i18n="th">ดูเคสโปรดักชันการแสดงสด →</span>
+    </a>
+  </div>
+  <p class="methodology">
+    <span data-i18n="en">OBSI Taipei is an active client since 2025. Promoter and artist names above are public per OBSI's own event marketing. Ad performance figures are drawn from an internal weekly report; contract terms, fees and company registration details are withheld.</span>
+    <span data-i18n="zh">OBSI Taipei 自 2025 年起為現行合作客戶。上述主辦方與藝人名稱皆依 OBSI 自身的活動行銷公開資訊呈現。廣告成效數字取自內部週報；合約條款、費用與公司統編等細節不予公開。</span>
+    <span data-i18n="th">OBSI Taipei เป็นลูกค้าที่ทำงานร่วมกันอย่างต่อเนื่องตั้งแต่ปี 2025 ชื่อผู้จัดและศิลปินข้างต้นเป็นข้อมูลสาธารณะตามการตลาดของ OBSI เอง ตัวเลขผลลัพธ์โฆษณานำมาจากรายงานภายในรายสัปดาห์ เงื่อนไขสัญญา ค่าใช้จ่าย และข้อมูลทะเบียนบริษัทไม่เปิดเผย</span>
+  </p>
+</section>
+
+<script>
+(function(){
+  var KEY = 'caseLangPref';
+  function apply(lang){
+    document.documentElement.setAttribute('data-lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false');
+    });
+    try{ localStorage.setItem(KEY, lang); }catch(e){}
+  }
+  document.querySelectorAll('.lang-btn').forEach(function(b){
+    b.addEventListener('click', function(){ apply(b.getAttribute('data-lang')); });
+  });
+  var saved = 'en';
+  try{ saved = localStorage.getItem(KEY) || 'en'; }catch(e){}
+  apply(saved);
+})();
+</script>
